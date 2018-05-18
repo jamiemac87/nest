@@ -1,7 +1,7 @@
-import { Transport } from '../enums/transport.enum';
-import { CustomTransportStrategy } from './custom-transport-strategy.interface';
-import { Server } from './../server/server';
 import { MqttClientOptions } from '@nestjs/common/interfaces/external/mqtt-options.interface';
+import { Transport } from '../enums/transport.enum';
+import { Server } from './../server/server';
+import { CustomTransportStrategy } from './custom-transport-strategy.interface';
 export declare type MicroserviceOptions = GrpcOptions | TcpOptions | RedisOptions | NatsOptions | MqttOptions | CustomStrategy;
 export interface CustomStrategy {
     strategy: Server & CustomTransportStrategy;
@@ -12,7 +12,10 @@ export interface GrpcOptions {
     options: {
         url?: string;
         credentials?: any;
-        protoPath: string;
+        protoPath: string | {
+            root: string;
+            file: string;
+        };
         package: string;
     };
 }

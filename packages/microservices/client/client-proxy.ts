@@ -1,15 +1,10 @@
-import { Observable, Observer, throwError as _throw } from 'rxjs';
 import { isNil } from '@nestjs/common/utils/shared.utils';
+import { fromEvent, merge, Observable, Observer, throwError as _throw } from 'rxjs';
+import { map, take } from 'rxjs/operators';
+
+import { CONNECT_EVENT, ERROR_EVENT } from '../constants';
 import { InvalidMessageException } from '../exceptions/invalid-message.exception';
-import {
-  ReadPacket,
-  PacketId,
-  WritePacket,
-  ClientOptions,
-} from './../interfaces';
-import { fromEvent, merge } from 'rxjs';
-import { map, take, tap } from 'rxjs/operators';
-import { ERROR_EVENT, CONNECT_EVENT } from '../constants';
+import { ClientOptions, PacketId, ReadPacket, WritePacket } from './../interfaces';
 
 export abstract class ClientProxy {
   public abstract connect(): Promise<any>;
@@ -67,7 +62,9 @@ export abstract class ClientProxy {
     return merge(error$, connect$).pipe(take(1));
   }
 
-  protected getOptionsProp<T extends { options? }>(
+  protected getOptionsProp<T extends {
+    options?,
+  }>(
     obj: ClientOptions,
     prop: keyof T['options'],
     defaultValue = undefined,
